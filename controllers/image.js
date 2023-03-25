@@ -1,20 +1,64 @@
 // Image Endpoint
 
 const Clarifai = require('clarifai');
+const { config } = require('dotenv');
 
+config();
+
+// const returnClarifaiRequestOptions = (imageUrl) => {
+//   // Your PAT (Personal Access Token) can be found in the portal under Authentification
+//   const PAT = process.env.PAT;
+//   // Specify the correct user_id/app_id pairings
+//   // Since you're making inferences outside your app's scope
+//   const USER_ID = process.env.USER_ID;
+//   const APP_ID = process.env.APP_ID;
+//   // Change these to whatever model and image URL you want to use
+//   // const MODEL_ID = process.env.MODEL_ID;
+//   // const MODEL_VERSION_ID = process.env.MODEL_VERSION;
+//   const IMAGE_URL = 'imageUrl';
+
+//   const raw = JSON.stringify({
+//     "user_app_id": {
+//       "user_id": USER_ID,
+//       "app_id": APP_ID
+//     },
+//     "inputs": [
+//       {
+//         "data": {
+//           "image": {
+//             "url": IMAGE_URL
+//           }
+//         }
+//       }
+//     ]
+//   });
+
+//   const requestOptions = {
+//         method: 'POST',
+//         headers: {
+//             'Accept': 'application/json',
+//             'Authorization': 'Key ' + PAT
+//         },
+//         body: raw
+//     };
+
+//   return requestOptions
+// }
+
+// Clarifai And Andrei Way
+// fetch("https://api.clarifai.com/v2/models/" + 'face-detection' + "/outputs", returnClarifaiRequestOptions(this.state.imageUrl))
 
 const app = new Clarifai.App({
-	// apiKey: 'f35da08c1cf3468989bcbdb6d36ab62f'
-  apiKey: '97c957e76a61465baf7838cac205429a'
+  apiKey: process.env.API_KEY
 });
 
 const handleApiCall = (req, res) => {
   app.models.predict(
     {
-    id: 'face-detection',
-    name: 'face-detection',
-    version: '6dc7e46bc9124c5c8824be4822abe105',
-    type: 'visual-detector',
+    id: process.env.MODEL_ID,
+    name: process.env.MODEL_NAME,
+    version: process.env.MODEL_VERSION,
+    type: process.env.MODEL_TYPE,
   }, req.body.input)
   .then(data => {
     res.json(data)
